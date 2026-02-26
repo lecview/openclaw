@@ -49,5 +49,4 @@ ENV HOME=/home/node
 
 USER node
 
-# 启动时先复制自定义配置，再启动 Gateway
-CMD ["sh", "-c", "cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --bind lan --port 18789"]
+CMD ["sh", "-c", "cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"]
