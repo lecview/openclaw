@@ -49,4 +49,4 @@ ENV HOME=/home/node
 
 USER node
 
-CMD ["sh", "-c", "cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"]
+CMD ["sh", "-c", "mkdir -p /home/node/.openclaw && cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"]
