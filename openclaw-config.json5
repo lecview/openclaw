@@ -1,81 +1,104 @@
 {
-  models: {
-    mode: "merge",
-    providers: {
+  "models": {
+    "mode": "merge",
+    "providers": {
       "cpa-proxy": {
-        baseUrl: "${CPA_BASE_URL}",
-        apiKey: "${CPA_API_KEY}",
-        api: "openai-completions",
-        models: [
-          { id: "grok-4.1-fast", name: "Grok 4.1 Fast (CPA)" },
-          { id: "grok-4.1", name: "Grok 4.1 (CPA)" },
-          { id: "grok-4.1-thinking", name: "Grok 4.1 Thinking (CPA)" },
-          { id: "grok-4.20-beta", name: "Grok 4.20 Beta (CPA)" },
-          { id: "qwen3.5-plus", name: "Qwen 3.5 Plus (CPA)" },
-          { id: "qwen-3.5-plus", name: "Qwen 3.5 Plus (Alt) (CPA)" },
-          { id: "qwen3-coder-plus", name: "Qwen3 Coder Plus (CPA)" },
-          { id: "qwen3-coder-flash", name: "Qwen3 Coder Flash (CPA)" },
-          { id: "gpt-5.1", name: "GPT-5.1 (CPA)" },
-          { id: "gpt-5.2", name: "GPT-5.2 (CPA)" },
-          { id: "gpt-5.2-codex", name: "GPT-5.2 Codex (CPA)" },
-          { id: "gpt-5.3-codex", name: "GPT-5.3 Codex (CPA)" },
-          { id: "gpt-5.3-codex-spark", name: "GPT-5.3 Codex Spark (CPA)" },
-        ],
-      },
-    },
+        "baseUrl": "${CPA_BASE_URL}",
+        "apiKey": "${CPA_API_KEY}",
+        "api": "openai-completions",
+        "models": [
+          { "id": "grok-4.1-fast", "name": "Grok 4.1 Fast (CPA)" },
+          { "id": "grok-4.1", "name": "Grok 4.1 (CPA)" },
+          { "id": "grok-4.1-thinking", "name": "Grok 4.1 Thinking (CPA)" },
+          { "id": "grok-4.20-beta", "name": "Grok 4.20 Beta (CPA)" },
+          { "id": "qwen3.5-plus", "name": "Qwen 3.5 Plus (CPA)" },
+          { "id": "qwen-3.5-plus", "name": "Qwen 3.5 Plus (Alt) (CPA)" },
+          { "id": "qwen3-coder-plus", "name": "Qwen3 Coder Plus (CPA)" },
+          { "id": "qwen3-coder-flash", "name": "Qwen3 Coder Flash (CPA)" },
+          { "id": "gpt-5.1", "name": "GPT-5.1 (CPA)" },
+          { "id": "gpt-5.2", "name": "GPT-5.2 (CPA)" },
+          { "id": "gpt-5.2-codex", "name": "GPT-5.2 Codex (CPA)" },
+          { "id": "gpt-5.3-codex", "name": "GPT-5.3 Codex (CPA)" },
+          { "id": "gpt-5.3-codex-spark", "name": "GPT-5.3 Codex Spark (CPA)" }
+        ]
+      }
+    }
   },
-  agents: {
-    defaults: {
-      model: {
-        primary: "cpa-proxy/grok-4.1-fast",
-        fallbacks: ["cpa-proxy/gpt-5.2", "cpa-proxy/grok-4.1"],
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "cpa-proxy/grok-4.1-fast",
+        "fallbacks": ["cpa-proxy/gpt-5.2", "cpa-proxy/grok-4.1"]
       },
-      models: {
-        "cpa-proxy/grok-4.1-fast": { alias: "Grok 4.1 Fast" },
-        "cpa-proxy/grok-4.1": { alias: "Grok 4.1" },
-        "cpa-proxy/grok-4.1-thinking": { alias: "Grok 4.1 Thinking" },
-        "cpa-proxy/grok-4.20-beta": { alias: "Grok 4.20 Beta" },
-        "cpa-proxy/qwen3.5-plus": { alias: "Qwen 3.5 Plus" },
-        "cpa-proxy/qwen-3.5-plus": { alias: "Qwen 3.5 Plus (Alt)" },
-        "cpa-proxy/qwen3-coder-plus": { alias: "Qwen3 Coder Plus" },
-        "cpa-proxy/qwen3-coder-flash": { alias: "Qwen3 Coder Flash" },
-        "cpa-proxy/gpt-5.1": { alias: "GPT-5.1" },
-        "cpa-proxy/gpt-5.2": { alias: "GPT-5.2" },
-        "cpa-proxy/gpt-5.2-codex": { alias: "GPT-5.2 Codex" },
-        "cpa-proxy/gpt-5.3-codex": { alias: "GPT-5.3 Codex" },
-        "cpa-proxy/gpt-5.3-codex-spark": { alias: "GPT-5.3 Codex Spark" },
+      "models": {
+        "cpa-proxy/grok-4.1-fast": { "alias": "Grok 4.1 Fast" },
+        "cpa-proxy/grok-4.1": { "alias": "Grok 4.1" },
+        "cpa-proxy/grok-4.1-thinking": { "alias": "Grok 4.1 Thinking" },
+        "cpa-proxy/grok-4.20-beta": { "alias": "Grok 4.20 Beta" },
+        "cpa-proxy/qwen3.5-plus": { "alias": "Qwen 3.5 Plus" },
+        "cpa-proxy/qwen-3.5-plus": { "alias": "Qwen 3.5 Plus (Alt)" },
+        "cpa-proxy/qwen3-coder-plus": { "alias": "Qwen3 Coder Plus" },
+        "cpa-proxy/qwen3-coder-flash": { "alias": "Qwen3 Coder Flash" },
+        "cpa-proxy/gpt-5.1": { "alias": "GPT-5.1" },
+        "cpa-proxy/gpt-5.2": { "alias": "GPT-5.2" },
+        "cpa-proxy/gpt-5.2-codex": { "alias": "GPT-5.2 Codex" },
+        "cpa-proxy/gpt-5.3-codex": { "alias": "GPT-5.3 Codex" },
+        "cpa-proxy/gpt-5.3-codex-spark": { "alias": "GPT-5.3 Codex Spark" }
       },
-      workspace: "/home/node/.openclaw/workspace",
-    },
+      "workspace": "/home/node/.openclaw/workspace",
+      "userTimezone": "Asia/Singapore",
+      "sandbox": {
+        "browser": {
+          "allowHostControl": true
+        }
+      }
+    }
   },
-  channels: {
-    telegram: {
-      enabled: true,
-      dmPolicy: "allowlist",
-      allowFrom: ["tg:${TELEGRAM_ALLOWED_USER}"],
-      groups: {
-        "*": { requireMention: true },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "allowlist",
+      "allowFrom": ["tg:${TELEGRAM_ALLOWED_USER}"],
+      "groups": {
+        "*": { "requireMention": true }
       },
-      streaming: "partial",
-      replyToMode: "first",
-      historyLimit: 50,
-      linkPreview: true,
-      mediaMaxMb: 5,
-      actions: { reactions: true, sendMessage: true },
-    },
+      "streaming": "partial",
+      "replyToMode": "first",
+      "historyLimit": 50,
+      "linkPreview": true,
+      "mediaMaxMb": 5,
+      "actions": { "reactions": true, "sendMessage": true }
+    }
   },
-  gateway: {
-    mode: "local",
-    trustedProxies: ["10.42.0.0/16"],
-    auth: {
-      rateLimit: {
-        exemptLoopback: true,
-        maxAttempts: 50,
-        lockoutMs: 60000,
-      },
+  "browser": {
+    "enabled": true,
+    "attachOnly": true,
+    "defaultProfile": "remote",
+    "remoteCdpTimeoutMs": 3000,
+    "remoteCdpHandshakeTimeoutMs": 5000,
+    "ssrfPolicy": {
+      "dangerouslyAllowPrivateNetwork": true
     },
-    controlUi: {
-      dangerouslyAllowHostHeaderOriginFallback: true,
-    },
+    "profiles": {
+      "remote": {
+        "cdpUrl": "http://openclaw-sandbox-browser:9222",
+        "color": "#FF4500"
+      }
+    }
   },
+  "gateway": {
+    "mode": "local",
+    "trustedProxies": ["10.42.0.0/16"],
+    "auth": {
+      "rateLimit": {
+        "exemptLoopback": true,
+        "maxAttempts": 50,
+        "lockoutMs": 60000
+      }
+    },
+    "controlUi": {
+      "dangerouslyAllowHostHeaderOriginFallback": true,
+      "dangerouslyDisableDeviceAuth": true
+    }
+  }
 }
