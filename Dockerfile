@@ -25,10 +25,6 @@ COPY --chown=node:node scripts ./scripts
 USER node
 RUN pnpm install --frozen-lockfile
 
-# Optionally install Chromium and Xvfb for browser automation.
-# Build with: docker build --build-arg OPENCLAW_INSTALL_BROWSER=1 ...
-# Adds ~300MB but eliminates the 60-90s Playwright install on every container start.
-# Must run after pnpm install so playwright-core is available in node_modules.
 USER root
 ARG OPENCLAW_INSTALL_BROWSER=""
 RUN if [ -n "$OPENCLAW_INSTALL_BROWSER" ]; then \
@@ -45,19 +41,16 @@ RUN if [ -n "$OPENCLAW_INSTALL_BROWSER" ]; then \
 USER node
 COPY --chown=node:node . .
 RUN pnpm build
-# Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
 ENV NODE_ENV=production
+ENV HOME=/home/node
 
-# Security hardening: Run as non-root user
-# The node:22-bookworm image includes a 'node' user (uid 1000)
-# This reduces the attack surface by preventing container escape via root privileges
+# 把自定义配置文件复制到 OpenClaw 默认配置目录
+RUN mkdir -p /home/node/.openclaw && \
+    cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json
+
 USER node
 
-# Copy custom start script
-COPY --chown=node:node start.sh /app/start.sh
-
-# Start via custom script that writes openclaw.json config from env vars
-CMD ["bash", "/app/start.sh"]
+CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--bind", "lan", "--port", "18789"]
