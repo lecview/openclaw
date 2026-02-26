@@ -46,10 +46,6 @@
         "cpa-proxy/gpt-5.3-codex-spark": { alias: "GPT-5.3 Codex Spark" },
       },
       workspace: "/home/node/.openclaw/workspace",
-      compaction: {
-        mode: "safeguard",
-      },
-      maxConcurrent: 4,
     },
   },
   channels: {
@@ -66,11 +62,6 @@
       linkPreview: true,
       mediaMaxMb: 5,
       actions: { reactions: true, sendMessage: true },
-    },
-  },
-  skills: {
-    clawhub: {
-      enabled: true,
     },
   },
   gateway: {
