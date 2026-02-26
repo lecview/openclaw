@@ -67,6 +67,11 @@ cat > /home/node/.openclaw/openclaw.json << OPENCLAW_CONFIG
       actions: { reactions: true, sendMessage: true },
     },
   },
+  gateway: {
+    controlUi: {
+      dangerouslyAllowHostHeaderOriginFallback: true,
+    },
+  },
 }
 OPENCLAW_CONFIG
 
