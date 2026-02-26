@@ -3,14 +3,15 @@ set -e
 
 mkdir -p /home/node/.openclaw
 
-cat > /home/node/.openclaw/openclaw.json << OPENCLAW_CONFIG
+# 写入配置文件 - 注意这里用单引号heredoc避免shell解释,然后用sed替换变量
+cat > /home/node/.openclaw/openclaw.json << 'OPENCLAW_CONFIG_END'
 {
   models: {
     mode: "merge",
     providers: {
       "cpa-proxy": {
-        baseUrl: "${CPA_BASE_URL}",
-        apiKey: "${CPA_API_KEY}",
+        baseUrl: "__CPA_BASE_URL__",
+        apiKey: "__CPA_API_KEY__",
         api: "openai-completions",
         models: [
           { id: "grok-4.1-fast", name: "Grok 4.1 Fast (CPA)" },
@@ -58,7 +59,7 @@ cat > /home/node/.openclaw/openclaw.json << OPENCLAW_CONFIG
     telegram: {
       enabled: true,
       dmPolicy: "allowlist",
-      allowFrom: ["tg:${TELEGRAM_ALLOWED_USER}"],
+      allowFrom: ["tg:__TELEGRAM_ALLOWED_USER__"],
       groups: {
         "*": { requireMention: true },
       },
@@ -73,6 +74,16 @@ cat > /home/node/.openclaw/openclaw.json << OPENCLAW_CONFIG
     },
   },
 }
-OPENCLAW_CONFIG
+OPENCLAW_CONFIG_END
+
+# 用sed替换占位符为实际环境变量值
+sed -i "s|__CPA_BASE_URL__|${CPA_BASE_URL}|g" /home/node/.openclaw/openclaw.json
+sed -i "s|__CPA_API_KEY__|${CPA_API_KEY}|g" /home/node/.openclaw/openclaw.json
+sed -i "s|__TELEGRAM_ALLOWED_USER__|${TELEGRAM_ALLOWED_USER}|g" /home/node/.openclaw/openclaw.json
+
+# 调试输出 - 确认配置文件已写入
+echo "=== OpenClaw config written ==="
+cat /home/node/.openclaw/openclaw.json
+echo "=== Starting OpenClaw Gateway ==="
 
 exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789
