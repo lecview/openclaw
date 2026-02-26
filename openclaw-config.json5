@@ -68,8 +68,21 @@
       actions: { reactions: true, sendMessage: true },
     },
   },
+  skills: {
+    clawhub: {
+      enabled: true,
+    },
+  },
   gateway: {
     mode: "local",
+    trustedProxies: ["10.42.0.0/16"],
+    auth: {
+      rateLimit: {
+        exemptLoopback: true,
+        maxAttempts: 50,
+        lockoutMs: 60000,
+      },
+    },
     controlUi: {
       dangerouslyAllowHostHeaderOriginFallback: true,
     },
