@@ -57,8 +57,8 @@ cat > /home/node/.openclaw/openclaw.json << OPENCLAW_CONFIG
   channels: {
     telegram: {
       enabled: true,
-      dmPolicy: "open",
-      allowFrom: ["*"],
+      dmPolicy: "allowlist",
+      allowFrom: ["tg:${TELEGRAM_ALLOWED_USER}"],
       groups: {
         "*": { requireMention: true },
       },
