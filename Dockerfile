@@ -47,10 +47,7 @@ RUN pnpm ui:build
 ENV NODE_ENV=production
 ENV HOME=/home/node
 
-# 把自定义配置文件复制到 OpenClaw 默认配置目录
-RUN mkdir -p /home/node/.openclaw && \
-    cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json
-
 USER node
 
-CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--bind", "lan", "--port", "18789"]
+# 启动时先复制自定义配置，再启动 Gateway
+CMD ["sh", "-c", "cp /app/openclaw-config.json5 /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --bind lan --port 18789"]
