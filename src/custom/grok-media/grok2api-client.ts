@@ -51,8 +51,10 @@ function ratioToImageSize(ratio?: string): string {
 }
 
 function makeTmpDir(): string {
-  // Use OpenClaw preferred tmp dir if set; otherwise /tmp
-  const base = (process.env.OPENCLAW_TMP_DIR || "/tmp").trim() || "/tmp";
+  // Prefer explicit env override
+  const base =
+    (process.env.OPENCLAW_TMP_DIR || "").trim() ||
+    "/home/node/.openclaw/media/tmp"; // default to an allowed local media root
   return path.join(base, "openclaw-grok-media");
 }
 
