@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { loadWebMedia } from "../../web/media.js";
+import { loadWebMediaRaw } from "../../web/media.js";
 
 export type Grok2ApiEnv = {
   baseUrl: string;
@@ -67,7 +67,7 @@ function safeName(prefix: string, ext: string): string {
   return `${prefix}-${ts}-${rand}${ext}`;
 }
 
-export async function generateImages(req: GrokImgRequest): Promise<{ files: string[] }>{
+export async function generateImages(req: GrokImgRequest): Promise<{ files: string[] }> {
   const env = resolveEnv();
   const url = `${env.baseUrl}/v1/images/generations`;
   const n = Math.max(1, Math.min(3, req.n ?? 1));
@@ -108,12 +108,17 @@ export async function generateImages(req: GrokImgRequest): Promise<{ files: stri
 
   const files: string[] = [];
   for (const imgUrl of urls.slice(0, n)) {
-    const local = path.join(tmpDir, safeName("grokimg", ".jpg"));
-    await loadWebMedia({
-      url: imgUrl,
-      localFilePath: local,
-      timeoutMs: 120000,
-    });
+    const media = await loadWebMediaRaw(imgUrl);
+    const ct = (media.contentType || "").toLowerCase();
+    const ext = ct.includes("png")
+      ? ".png"
+      : ct.includes("webp")
+        ? ".webp"
+        : ct.includes("gif")
+          ? ".gif"
+          : ".jpg";
+    const local = path.join(tmpDir, safeName("grokimg", ext));
+    await fs.writeFile(local, media.buffer);
     files.push(local);
   }
 
@@ -125,7 +130,7 @@ function extractFirstUrl(text: string): string {
   return m?.[0] || "";
 }
 
-export async function generateVideo(req: GrokVideoRequest): Promise<{ files: string[] }>{
+export async function generateVideo(req: GrokVideoRequest): Promise<{ files: string[] }> {
   const env = resolveEnv();
   const url = `${env.baseUrl}/v1/chat/completions`;
 
@@ -154,7 +159,7 @@ export async function generateVideo(req: GrokVideoRequest): Promise<{ files: str
     throw new Error(`grok2api video HTTP ${res.status}: ${text.slice(0, 600)}`);
   }
 
-  const json = JSON.parse(text) as any;
+  const json = JSON.parse(text);
   const content = json?.choices?.[0]?.message?.content;
   const contentText = typeof content === "string" ? content : JSON.stringify(content);
   const videoUrl = extractFirstUrl(contentText);
@@ -165,12 +170,9 @@ export async function generateVideo(req: GrokVideoRequest): Promise<{ files: str
   const tmpDir = makeTmpDir();
   await ensureDir(tmpDir);
 
+  const media = await loadWebMediaRaw(videoUrl);
   const local = path.join(tmpDir, safeName("grokvideo", ".mp4"));
-  await loadWebMedia({
-    url: videoUrl,
-    localFilePath: local,
-    timeoutMs: 300000,
-  });
+  await fs.writeFile(local, media.buffer);
 
   return { files: [local] };
 }

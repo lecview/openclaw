@@ -1,26 +1,41 @@
 import fs from "node:fs/promises";
-import type { CommandHandler } from "../auto-reply/reply/commands-types.js";
-import type { ReplyPayload } from "../auto-reply/types.js";
+import type { CommandHandler } from "../../auto-reply/reply/commands-types.js";
+import type { ReplyPayload } from "../../auto-reply/types.js";
 import { generateImages, generateVideo } from "./grok2api-client.js";
 
-function resolveString(args: any, key: string): string {
-  const v = args?.values?.[key];
+type CommandArgsLike = { values?: Record<string, unknown> };
+
+function getValues(args: unknown): Record<string, unknown> {
+  if (typeof args !== "object" || args === null) {
+    return {};
+  }
+  const a = args as CommandArgsLike;
+  if (typeof a.values !== "object" || a.values === null) {
+    return {};
+  }
+  return a.values;
+}
+
+function resolveString(args: unknown, key: string): string {
+  const v = getValues(args)[key];
   return typeof v === "string" ? v.trim() : "";
 }
 
-function resolveBool(args: any, key: string): boolean {
-  const v = args?.values?.[key];
+function resolveBool(args: unknown, key: string): boolean {
+  const v = getValues(args)[key];
   return typeof v === "boolean" ? v : false;
 }
 
-function resolveInt(args: any, key: string, fallback: number): number {
-  const v = args?.values?.[key];
+function resolveInt(args: unknown, key: string, fallback: number): number {
+  const v = getValues(args)[key];
   if (typeof v === "number") {
     return Math.trunc(v);
   }
   if (typeof v === "string" && v.trim()) {
     const n = Number(v);
-    if (Number.isFinite(n)) return Math.trunc(n);
+    if (Number.isFinite(n)) {
+      return Math.trunc(n);
+    }
   }
   return fallback;
 }
@@ -71,10 +86,7 @@ export const handleGrokMediaCommands: CommandHandler = async (params) => {
       const n = Math.max(1, Math.min(3, resolveInt(args, "n", 1)));
       const nsfw = resolveBool(args, "nsfw");
 
-      // Add basic safety steering for prompt (adult + clothed) if user is too vague.
-      const safePrompt = `${prompt}`;
-
-      const result = await generateImages({ prompt: safePrompt, ratio, n, nsfw });
+      const result = await generateImages({ prompt, ratio, n, nsfw });
 
       const reply: ReplyPayload = {
         text: `grokimg: ratio=${ratio} n=${n}`,
@@ -102,11 +114,12 @@ export const handleGrokMediaCommands: CommandHandler = async (params) => {
     await scheduleCleanup(result.files, 180_000);
 
     return { shouldContinue: false, reply };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
     return {
       shouldContinue: false,
       reply: {
-        text: `grok media failed: ${String(err?.message || err).slice(0, 1800)}`,
+        text: `grok media failed: ${msg.slice(0, 1800)}`,
       },
     };
   }
