@@ -44,7 +44,7 @@ export function buildGrokMediaCommands(): ChatCommandDefinition[] {
       acceptsArgs: true,
       argsParsing: "none",
       category: "media",
-      scope: "native",
+      scope: "both",
       args: [
         {
           name: "prompt",
@@ -81,7 +81,7 @@ export function buildGrokMediaCommands(): ChatCommandDefinition[] {
       acceptsArgs: true,
       argsParsing: "none",
       category: "media",
-      scope: "native",
+      scope: "both",
       args: [
         {
           name: "prompt",
