@@ -1,7 +1,6 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { loadWebMediaRaw } from "../../web/media.js";
 
 export type Grok2ApiEnv = {
   baseUrl: string;
@@ -108,8 +107,11 @@ export async function generateImages(req: GrokImgRequest): Promise<{ files: stri
 
   const files: string[] = [];
   for (const imgUrl of urls.slice(0, n)) {
-    const media = await loadWebMediaRaw(imgUrl);
-    const ct = (media.contentType || "").toLowerCase();
+    const imgRes = await fetch(imgUrl);
+    if (!imgRes.ok) {
+      throw new Error(`Failed to download image: HTTP ${imgRes.status} from ${imgUrl}`);
+    }
+    const ct = (imgRes.headers.get("content-type") || "").toLowerCase();
     const ext = ct.includes("png")
       ? ".png"
       : ct.includes("webp")
@@ -117,8 +119,9 @@ export async function generateImages(req: GrokImgRequest): Promise<{ files: stri
         : ct.includes("gif")
           ? ".gif"
           : ".jpg";
+    const buf = Buffer.from(await imgRes.arrayBuffer());
     const local = path.join(tmpDir, safeName("grokimg", ext));
-    await fs.writeFile(local, media.buffer);
+    await fs.writeFile(local, buf);
     files.push(local);
   }
 
@@ -170,9 +173,13 @@ export async function generateVideo(req: GrokVideoRequest): Promise<{ files: str
   const tmpDir = makeTmpDir();
   await ensureDir(tmpDir);
 
-  const media = await loadWebMediaRaw(videoUrl);
+  const vidRes = await fetch(videoUrl);
+  if (!vidRes.ok) {
+    throw new Error(`Failed to download video: HTTP ${vidRes.status} from ${videoUrl}`);
+  }
+  const vidBuf = Buffer.from(await vidRes.arrayBuffer());
   const local = path.join(tmpDir, safeName("grokvideo", ".mp4"));
-  await fs.writeFile(local, media.buffer);
+  await fs.writeFile(local, vidBuf);
 
   return { files: [local] };
 }
