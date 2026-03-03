@@ -20,6 +20,7 @@ import {
 } from "./commands-info.js";
 import { handleModelsCommand } from "./commands-models.js";
 import { handlePluginCommand } from "./commands-plugin.js";
+import { handleGrokMediaCommands } from "../../custom/grok-media/handler.js";
 import {
   handleAbortTrigger,
   handleActivationCommand,
@@ -133,7 +134,9 @@ export async function emitResetCommandHooks(params: {
 export async function handleCommands(params: HandleCommandsParams): Promise<CommandHandlerResult> {
   if (HANDLERS === null) {
     HANDLERS = [
-      // Plugin commands are processed first, before built-in commands
+      // Grok media commands are processed first (deterministic, bypasses LLM)
+      handleGrokMediaCommands,
+      // Plugin commands are processed next, before built-in commands
       handlePluginCommand,
       handleBashCommand,
       handleActivationCommand,

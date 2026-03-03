@@ -128,8 +128,11 @@ let cachedRegistry: ReturnType<typeof getActivePluginRegistry> | null = null;
 let cachedNativeCommandSurfaces: Set<string> | null = null;
 let cachedNativeRegistry: ReturnType<typeof getActivePluginRegistry> | null = null;
 
+import { buildGrokMediaCommands } from "../custom/grok-media/command-defs.js";
+
 function buildChatCommands(): ChatCommandDefinition[] {
   const commands: ChatCommandDefinition[] = [
+    ...buildGrokMediaCommands(),
     defineChatCommand({
       key: "help",
       nativeName: "help",
