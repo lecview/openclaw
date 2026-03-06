@@ -63,7 +63,7 @@ export function buildGrokMediaCommands(): ChatCommandDefinition[] {
         },
         {
           name: "n",
-          description: "Number of images (1-3)",
+          description: "Number of images (1-10)",
           type: "string",
           choices: [...GROKIMG_N_CHOICES],
         },
