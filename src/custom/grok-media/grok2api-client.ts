@@ -71,7 +71,7 @@ function safeName(prefix: string, ext: string): string {
 export async function generateImages(req: GrokImgRequest): Promise<{ files: string[] }> {
   const env = resolveEnv();
   const url = `${env.baseUrl}/v1/images/generations`;
-  const n = Math.max(1, Math.min(3, req.n ?? 1));
+  const n = Math.max(1, Math.min(10, req.n ?? 1));
   const size = ratioToImageSize(req.ratio);
 
   const body = {
