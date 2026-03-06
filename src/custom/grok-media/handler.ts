@@ -83,7 +83,7 @@ export const handleGrokMediaCommands: CommandHandler = async (params) => {
   try {
     if (isImg) {
       const ratio = resolveString(args, "ratio") || "1:1";
-      const n = Math.max(1, Math.min(3, resolveInt(args, "n", 1)));
+      const n = Math.max(1, Math.min(10, resolveInt(args, "n", 1)));
       const nsfw = resolveBool(args, "nsfw");
 
       const result = await generateImages({ prompt, ratio, n, nsfw });
